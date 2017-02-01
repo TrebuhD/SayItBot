@@ -1,19 +1,26 @@
-import org.telegram.telegrambots.api.methods.send.SendMessage;
+import org.telegram.telegrambots.api.methods.send.SendVoice;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 import util.Constants;
 import util.Secrets;
 
+import java.io.File;
+
 class SayItBot extends TelegramLongPollingBot {
 
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
-            SendMessage message = new SendMessage() // mandatory fields
+            SendVoice voice = new SendVoice()
                     .setChatId(update.getMessage().getChatId())
-                    .setText(update.getMessage().getText());
+                    .setReplyToMessageId(update.getMessage().getMessageId());
+            FileDownloader speechDownloader = new FileDownloader(update.getMessage().getText());
             try {
-                sendMessage(message);
+                speechDownloader.downloadAudioFile();
+                File speechFile = speechDownloader.getSpeechFile();
+                voice.setNewVoice(speechFile);
+                sendVoice(voice);
+                speechFile.delete();
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }

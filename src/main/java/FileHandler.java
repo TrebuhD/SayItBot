@@ -1,10 +1,8 @@
-import java.net.URI;
-
-public interface FileHandler {
+interface FileHandler {
     /*
     Download and save a file, return local URI
      */
-    URI downloadFile(String fileURL);
+    boolean downloadAudioFile();
 
-    boolean deleteFile(URI fileURI);
+    boolean deleteFile();
 }

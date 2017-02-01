@@ -23,6 +23,8 @@ class SayItCommand extends BotCommand {
         }
         String message = builder.toString();
 
+        BotLogger.info(TAG, "message: " +  message);
+
         SendVoice voice = new SendVoice()
                 .setChatId(chat.getId().toString());
         FileDownloader speechDownloader = new FileDownloader(message);
